@@ -1,0 +1,26 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tailored On</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/index.css' %}">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="outersearch"><div>
+            <div id="innerwrapper">
+                <form action="{% url 'search_result' %}" method="get">
+                    <input id="query" name="query" onfocus="this.value=''" type="text" value="Enter Summoner Name" >
+                    <select id="region" value="Region" name="region">
+                        <option name="euw1">EUW</option>
+                        <option name="na1">NA</option>
+                    </select>
+                    <input id="button" value=">" type="submit" name="button" accesskey="enter">
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

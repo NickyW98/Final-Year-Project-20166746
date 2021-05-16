@@ -1,0 +1,155 @@
+{% load static %}
+{% load mathfilters %}
+{% load match_ids %}
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tailored On</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/search.css' %}">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="topbar">
+            <div id="logo">
+                <img src="{% static 'images/logo.png' %}" style="height:100%">
+            </div>
+            <div id="outerbar">
+                <form action="{% url 'search_result' %}" method="get">
+                    <input id="textbox" onfocus="this.value=''" type="text" name="query" type="text" placeholder="Enter Summoner Name">
+                    <select id="region" name="region">
+                        <option name="euw1">EUW</option>
+                        <option name="na1">NA</option>
+                    </select>
+                    <input id="button" type="submit" accesskey="enter" value=">" name="button">
+                </form>
+            </div>
+        </div>
+        <div id="content">
+            <div id="summonerdetails">
+                <div id="summonericon" style="background-image: url({{profileIconPath}});">
+                    <div id="summonerlevel">{{search.summonerLevel}}</div>
+                </div>
+                <div id="summonername">{{search.name}}</div>
+                <div id="soloqueue">
+                    <div id="sololabel">Solo Queue</div>
+                    <div id="soloimage" style="background-image: url({{ranked_image.solo}});"></div>
+                    {% with total_games=ranked_json.solo_queue_losses|add:ranked_json.solo_queue_wins %}
+                    {% with winrate=ranked_json.solo_queue_wins|div:total_games %}
+                    <div id="solowinrate"><h1>{{ winrate|mul:100|floatformat:1 }}%</h1>Winrate | <h1>{{ranked_json.solo_queue_wins}}</h1> Wins - <h2>{{ranked_json.solo_queue_losses}}</h2> Losses</div>
+                    {% endwith %}
+                    {% endwith %}
+                    <div id="solotier">{{ranked_json.solo_queue_tier}} {{ranked_json.solo_queue_rank}}</div>
+                </div>
+                <div id="flexqueue">
+                    <div id="flexlabel">Flex Queue</div>
+                    <div id="fleximage" style="background-image: url({{ranked_image.flex}});"></div>
+                    {% with total_games=ranked_json.flex_queue_losses|add:ranked_json.flex_queue_wins %}
+                    {% with winrate=ranked_json.flex_queue_wins|div:total_games %}
+                    <div id="flexwinrate"><h2>{{ winrate|mul:100|floatformat:1 }}%</h2> Winrate | <h1>{{ranked_json.flex_queue_wins}}</h1> Wins - <h2>{{ranked_json.flex_queue_losses}}</h2> Losses</div>
+                    {% endwith %}
+                    {% endwith %}
+                    <div id="flextier">{{ranked_json.flex_queue_tier}} {{ranked_json.flex_queue_rank}}</div>
+                </div>
+            </div>
+            <div id="innerwrapper">
+
+                <div id="innerwrapperright">
+                    {% for match in match_details|slice:":10"  %}
+                        <div class="matchcontent">{% for participant in matches %}
+                                {% if participant.match_id.match_id == match.first.match_id %}
+                                    {% if participant.win %}
+                                                <div id="win"></div>
+                                    {% else %}
+                                        <div id="loss"></div>
+                                    {% endif %}
+                            <div id="left-matchstats">
+                                <div id="matchtype1">
+                                    {% for queue in queue_types%}
+                                        {% if match.first.queue == queue.queueId %}
+                                            {{queue.description}}
+                                        {% endif %}
+                                {% endfor %}</div>
+
+                                <div id="matchlefticons1">
+                                    <div id="matchleftchampicon1" style="background-image: url({{participant.pick|match_champion|get_champion_image}});"></div>
+                                    <div id="matchleft1stsummonericon1" style="background-image: url({{participant.summoner_spell_one|get_spell_image}});"></div>
+                                    <div id="matchleft2ndsummonericon1" style="background-image: url({{participant.summoner_spell_two|get_spell_image}});"></div>
+                                </div>
+                                <div id="matchrighticons1">
+                                    <div id="matchleftprimaryruneicon1" style="background-image: url({{participant.primary_rune_one|get_rune_image}});"></div>
+                                    <div id ="primaryrune2" style="background-image: url({{participant.primary_rune_two|get_rune_image}});"></div>
+                                    <div id ="primaryrune3" style="background-image: url({{participant.primary_rune_three|get_rune_image}});"></div>
+                                    <div id ="primaryrune4" style="background-image: url({{participant.primary_rune_four|get_rune_image}});"></div>
+                                    <div id="matchleftsecondaryruneicon1" style="background-image: url({{participant.secondary_rune_one|get_secondary_rune_image}});"></div>
+                                    <div id ="secondaryrune2" style="background-image: url({{participant.secondary_rune_one|get_rune_image}});"></div>
+                                    <div id ="secondaryrune3" style="background-image: url({{participant.secondary_rune_two|get_rune_image}});"></div>
+                                </div>
+                                <div id="perks">
+                                    <div class="perk" style="background-image: url({{participant.stat_rune_one|get_perk_image}});"></div>
+                                    <div class="perk" style="background-image: url({{participant.stat_rune_two|get_perk_image}});"></div>
+                                    <div class="perk" style="background-image: url({{participant.stat_rune_three|get_perk_image}});"></div>
+                                </div>
+                                <div id="matchchampname1">
+                                    {{participant.pick|match_champion}}
+                                        </div>
+
+                                </div>
+                                <div id="right-matchstats">
+                                    <div id="matchkdastats1">
+                                        <div id="matchkdalabel1">KDA</div>
+                                        <div id="matchkda1">{{participant.kills}} / {{participant.deaths}} / {{participant.assists}}</div>
+
+                                    </div>
+                                    <div id="itemsmain">
+                                            <div class="items" style="background-image: url({{participant.item_one|get_item_image}});">  </div>
+                                            <div class="items" style="background-image: url({{participant.item_two|get_item_image}});">  </div>
+                                            <div class="items" style="background-image: url({{participant.item_three|get_item_image}});">  </div>
+                                            <div class="items" style="background-image: url({{participant.item_four|get_item_image}});">  </div>
+                                            <div class="items" style="background-image: url({{participant.item_five|get_item_image}});">  </div>
+                                            <div class="items" style="background-image: url({{participant.item_six|get_item_image}});">  </div>
+                                        </div>
+                                    <div id="otherparticipants">
+                                        {% for otherparticipants in participants%}
+                                            {% if otherparticipants.0.match_id.match_id == match.first.match_id %}
+
+                                        <div id="blueteam">
+                                            <ul style="list-style-type:none;">
+                                              <li><img src="{{otherparticipants.0.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.0.name}}</li>
+                                              <li><img src="{{otherparticipants.1.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.1.name}}</li>
+                                              <li><img src="{{otherparticipants.2.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.2.name}}</li>
+                                                <li><img src="{{otherparticipants.3.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.3.name}}</li>
+                                                <li><img src="{{otherparticipants.4.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.4.name}}</li>
+                                            </ul>
+                                        </div>
+                                        <div id="redteam">
+                                            <ul style="list-style-type:none;">
+                                              <li><img src="{{otherparticipants.5.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.5.name}}</li>
+                                              <li><img src="{{otherparticipants.6.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.6.name}}</li>
+                                              <li><img src="{{otherparticipants.7.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.7.name}}</li>
+                                                <li><img src="{{otherparticipants.8.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.8.name}}</li>
+                                                <li><img src="{{otherparticipants.9.pick|match_champion|get_champion_image}}" class = "otherpps">{{otherparticipants.9.name}}</li>
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                             </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+
+
+</html>

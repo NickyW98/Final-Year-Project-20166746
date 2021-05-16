@@ -1,0 +1,59 @@
+body{
+    background-color: #524a5b;
+}
+
+#wrapper{
+    border:1px solid #524a5b;
+    background-image:url(../images/logo.png);
+    width:100%;
+    height:66.7%;
+    background-repeat:no-repeat;
+    background-position: center;
+}
+
+#innerwrapper{
+    width:30%;
+    height:9.8%;
+    margin-top:25%;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#a066e3;
+    border-radius:10px;
+}
+
+#query{
+    outline: none;
+    width:63%;
+    background-color: 524a5b;
+    border-radius:10px;
+    font-size:25px;
+    color:white;
+    margin:1.3%;
+    padding:1.4%;
+    float:left;
+}
+
+#region{
+    outline: none;
+    width:20%;
+    background-color: 524a5b;
+    border-radius:10px;
+    font-size:25px;
+    color:white;
+    margin-top:1.1%;
+    padding:1.5%;
+    float:left;
+}
+
+#button{
+    outline: none;
+    width:12%;
+    background-color: 524a5b;
+    border-radius:10px;
+    font-size:25px;
+    padding:1.3%;
+    margin-top:1.1%;
+    color:white;
+    float:right;
+    margin-right:1.4%;
+}
